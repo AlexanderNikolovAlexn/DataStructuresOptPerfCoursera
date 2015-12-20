@@ -136,7 +136,12 @@ public abstract class Document {
 	public double getFleschScore()
 	{
 	    // TODO: Implement this method
-	    return 0.0;
+		double words = getNumWords();
+		double sentences = getNumSentences();
+		double syllables = getNumSyllables();
+		double result = 206.835 - 1.015 * (words / sentences) 
+				- 84.6 * (syllables / words);
+	    return result;
 	}
 	
 	
