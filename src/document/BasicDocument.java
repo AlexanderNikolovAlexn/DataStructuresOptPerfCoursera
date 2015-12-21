@@ -77,27 +77,32 @@ public class BasicDocument extends Document
 	 * You are encouraged to add your own tests.  */
 	public static void main(String[] args)
 	{
-		testCase(new BasicDocument("This is a test.  How many???  "
-		        + "Senteeeeeeeeeences are here... there should be 5!  Right?"),
-				16, 13, 5);
-		testCase(new BasicDocument(""), 0, 0, 0);
-		testCase(new BasicDocument("sentence, with, lots, of, commas.!  "
-		        + "(And some poaren)).  The output is: 7.5."), 15, 11, 4);
-		testCase(new BasicDocument("many???  Senteeeeeeeeeences are"), 6, 3, 2);
-		testCase(new BasicDocument("Here is a series of test sentences. Your program should "
-				+ "find 3 sentences, 33 words, and 49 syllables. Not every word will have "
-				+ "the correct amount of syllables (example, for example), "
-				+ "but most of them will."), 49, 33, 3);
-		testCase(new BasicDocument("Segue"), 2, 1, 1);
-		testCase(new BasicDocument("Sentence"), 2, 1, 1);
-		testCase(new BasicDocument("Sentences?!"), 3, 1, 1);
-		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
-		         32, 15, 1);
+//		testCase(new BasicDocument("This is a test.  How many???  "
+//		        + "Senteeeeeeeeeences are here... there should be 5!  Right?"),
+//				16, 13, 5);
+//		testCase(new BasicDocument(""), 0, 0, 0);
+//		testCase(new BasicDocument("sentence, with, lots, of, commas.!  "
+//		        + "(And some poaren)).  The output is: 7.5."), 15, 11, 4);
+//		testCase(new BasicDocument("many???  Senteeeeeeeeeences are"), 6, 3, 2);
+//		testCase(new BasicDocument("Here is a series of test sentences. Your program should "
+//				+ "find 3 sentences, 33 words, and 49 syllables. Not every word will have "
+//				+ "the correct amount of syllables (example, for example), "
+//				+ "but most of them will."), 49, 33, 3);
+//		testCase(new BasicDocument("Segue"), 2, 1, 1);
+//		testCase(new BasicDocument("Sentence"), 2, 1, 1);
+//		testCase(new BasicDocument("Sentences?!"), 3, 1, 1);
+//		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
+//		         32, 15, 1);
 		
-		Document doc = new BasicDocument("This is a test.  How many???  "
-		        + "Senteeeeeeeeeences are here... there should be 5!  Right?");
-		System.out.println(doc.getFleschScore());
-		
+		Document doc = new BasicDocument("one (1), two (2), three (3)");
+		List<String> list = doc.getTokens("[^, ]+");
+		System.out.println(list.toString());
+		List<String> list2 = doc.getTokens("[^,]+");
+		System.out.println(list2.toString());
+		List<String> list3 = doc.getTokens("[a-z()0-9]+");
+		System.out.println(list3.toString());
+		List<String> list4 = doc.getTokens("[a-z]+|[()0-9]+");
+		System.out.println(list4.toString());
 	}
 	
 }
