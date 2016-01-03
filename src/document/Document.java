@@ -29,7 +29,7 @@ public abstract class Document {
 	 * @return A List of tokens from the document text that match the regex 
 	 *   pattern
 	 */
-	public List<String> getTokens(String pattern)
+	protected List<String> getTokens(String pattern)
 	{
 		ArrayList<String> tokens = new ArrayList<String>();
 		Pattern tokSplitter = Pattern.compile(pattern);
@@ -45,34 +45,29 @@ public abstract class Document {
 	// This is a helper function that returns the number of syllables
 	// in a word.  You should write this and use it in your 
 	// BasicDocument class.
-	// You will probably NOT need to add a countWords or a countSentences method
-	// here.  The reason we put countSyllables here because we'll use it again
-	// next week when we implement the EfficientDocument class.
-	protected int countSyllables(String word)
+	protected static int countSyllables(String word)
 	{
-		// TODO: Implement this method so that you can call it from the 
-	    // getNumSyllables method in BasicDocument (module 1) and 
-	    // EfficientDocument (module 2).
-		int result = 0;
-		boolean prevVowel = false;
-		int length = word.length() - 1;
-		for (int i = 0; i <= length; i++) {
-			char ch = Character.toLowerCase(word.charAt(i));
-			if(isVowel(ch) && !prevVowel && 
-					((i!= length) || (i == length && (ch != 'e' 
-							|| (ch == 'e' && result == 0))))) {
-				result++;
-				prevVowel = true;
+	    //System.out.print("Counting syllables in " + word + "...");
+		int numSyllables = 0;
+		boolean newSyllable = true;
+		String vowels = "aeiouy";
+		char[] cArray = word.toCharArray();
+		for (int i = 0; i < cArray.length; i++)
+		{
+		    if (i == cArray.length-1 && Character.toLowerCase(cArray[i]) == 'e' 
+		    		&& newSyllable && numSyllables > 0) {
+                numSyllables--;
+            }
+		    if (newSyllable && vowels.indexOf(Character.toLowerCase(cArray[i])) >= 0) {
+				newSyllable = false;
+				numSyllables++;
 			}
-			else if (!isVowel(ch)) {
-				prevVowel = false;
+			else if (vowels.indexOf(Character.toLowerCase(cArray[i])) < 0) {
+				newSyllable = true;
 			}
 		}
-	    return result;
-	}
-	
-	private boolean isVowel(char ch) {
-		return ch == 'a' || ch == 'o' || ch == 'y' || ch == 'i' || ch == 'e' || ch == 'u';
+		//System.out.println( "found " + numSyllables);
+		return numSyllables;
 	}
 	
 	/** A method for testing
@@ -135,13 +130,10 @@ public abstract class Document {
 	/** return the Flesch readability score of this document */
 	public double getFleschScore()
 	{
-	    // TODO: Implement this method
-		double words = getNumWords();
-		double sentences = getNumSentences();
-		double syllables = getNumSyllables();
-		double result = 206.835 - 1.015 * (words / sentences) 
-				- 84.6 * (syllables / words);
-	    return result;
+		double wordCount = (double)getNumWords();
+		return 206.835 - (1.015 * ((wordCount)/getNumSentences())) 
+				- (84.6 * (((double)getNumSyllables())/wordCount));
+	
 	}
 	
 	
