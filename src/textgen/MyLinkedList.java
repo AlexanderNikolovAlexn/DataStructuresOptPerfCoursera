@@ -1,6 +1,7 @@
 package textgen;
 
 import java.util.AbstractList;
+import java.util.ListIterator;
 
 
 /** A class that implements a doubly linked list
@@ -16,43 +17,80 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
-		// TODO: Implement this method
+		this.head = null;
+		this.tail = null;
+		this.size = 0;
 	}
 
 	/**
 	 * Appends an element to the end of the list
 	 * @param element The element to add
 	 */
-	public boolean add(E element ) 
+	public boolean add(E element) 
 	{
-		// TODO: Implement this method
-		return false;
+		LLNode<E> newElement = new LLNode<>(element);
+		if(this.size == 0) {
+			this.head = newElement;
+			this.tail = newElement;
+		}
+		else {
+			if(this.size == 1) {
+				this.head.next = newElement;
+				newElement.prev = this.head;
+				this.tail = newElement;
+			}
+			else {
+				this.tail.next = newElement;
+				newElement.prev = this.tail;
+				this.tail = newElement;
+			}
+		}
+		this.size++;
+		return true;
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
 	public E get(int index) 
 	{
-		// TODO: Implement this method.
-		return null;
+		return getElement(index).data;
 	}
 
+	private LLNode<E> getElement(int index) 
+	{
+		if(this.size == 0 || index < 0 || index >= this.size) {
+			throw new IndexOutOfBoundsException("Index " + index + " is out of range!");
+		}
+		
+		LLNode<E> currElement = head;
+		for (int i = 0; i < index; i++) {
+			currElement = currElement.next;
+		}
+		
+		return currElement;
+	}
+	
 	/**
 	 * Add an element to the list at the specified index
 	 * @param The index where the element should be added
 	 * @param element The element to add
 	 */
-	public void add(int index, E element ) 
+	public void add(int index, E element) 
 	{
-		// TODO: Implement this method
+		LLNode<E> currElement = getElement(index);
+		LLNode<E> newElement = new LLNode<>(element);
+		newElement.prev = currElement.prev;
+		newElement.next = currElement;
+		currElement.prev.next = newElement;
+		currElement.prev = newElement;		
+		this.size++;
 	}
 
 
 	/** Return the size of the list */
 	public int size() 
 	{
-		// TODO: Implement this method
-		return -1;
+		return this.size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -63,8 +101,26 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E remove(int index) 
 	{
-		// TODO: Implement this method
-		return null;
+		LLNode<E> currElement = getElement(index);
+		if(this.size == 1) {
+			this.head = null;
+			this.tail = null;
+		}
+		if(currElement.next != null) {
+			currElement.next.prev = currElement.prev;
+		}
+		else {
+			this.tail = currElement.prev;
+		}
+		if(currElement.prev != null) {
+			currElement.prev.next = currElement.next;
+		}
+		else {
+			this.head = currElement.next;
+		}
+		this.size--;
+		
+		return currElement.data;
 	}
 
 	/**
@@ -76,8 +132,13 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E set(int index, E element) 
 	{
-		// TODO: Implement this method
-		return null;
+		if(element == null) {
+			throw new NullPointerException("You are trying to set the value to null");
+		}
+		LLNode<E> currElement = getElement(index);
+		E oldValue = currElement.data;
+		currElement.data = element;
+		return oldValue;
 	}   
 }
 
@@ -86,9 +147,6 @@ class LLNode<E>
 	LLNode<E> prev;
 	LLNode<E> next;
 	E data;
-
-	// TODO: Add any other methods you think are useful here
-	// E.g. you might want to add another constructor
 
 	public LLNode(E e) 
 	{
