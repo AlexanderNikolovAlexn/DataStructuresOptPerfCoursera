@@ -28,24 +28,6 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public boolean add(E element) 
 	{
-//		LLNode<E> newElement = new LLNode<>(element);
-//		if(this.size == 0) {
-//			this.head = newElement;
-//			this.tail = newElement;
-//		}
-//		else {
-//			if(this.size == 1) {
-//				this.head.next = newElement;
-//				newElement.prev = this.head;
-//				this.tail = newElement;
-//			}
-//			else {
-//				this.tail.next = newElement;
-//				newElement.prev = this.tail;
-//				this.tail = newElement;
-//			}
-//		}
-//		this.size++;
 		add(this.size, element);
 		return true;
 	}
