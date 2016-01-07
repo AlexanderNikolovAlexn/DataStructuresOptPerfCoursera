@@ -28,24 +28,25 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public boolean add(E element) 
 	{
-		LLNode<E> newElement = new LLNode<>(element);
-		if(this.size == 0) {
-			this.head = newElement;
-			this.tail = newElement;
-		}
-		else {
-			if(this.size == 1) {
-				this.head.next = newElement;
-				newElement.prev = this.head;
-				this.tail = newElement;
-			}
-			else {
-				this.tail.next = newElement;
-				newElement.prev = this.tail;
-				this.tail = newElement;
-			}
-		}
-		this.size++;
+//		LLNode<E> newElement = new LLNode<>(element);
+//		if(this.size == 0) {
+//			this.head = newElement;
+//			this.tail = newElement;
+//		}
+//		else {
+//			if(this.size == 1) {
+//				this.head.next = newElement;
+//				newElement.prev = this.head;
+//				this.tail = newElement;
+//			}
+//			else {
+//				this.tail.next = newElement;
+//				newElement.prev = this.tail;
+//				this.tail = newElement;
+//			}
+//		}
+//		this.size++;
+		add(this.size, element);
 		return true;
 	}
 
@@ -77,12 +78,25 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public void add(int index, E element) 
 	{
-		LLNode<E> currElement = getElement(index);
 		LLNode<E> newElement = new LLNode<>(element);
-		newElement.prev = currElement.prev;
-		newElement.next = currElement;
-		currElement.prev.next = newElement;
-		currElement.prev = newElement;		
+		if(this.size == 0 && index == 0) {
+			this.head = newElement;
+			this.tail = newElement;
+		}
+		else {
+			if(index == this.size) {
+				newElement.prev = this.tail;
+				this.tail.next = newElement;
+				this.tail = newElement;
+			}
+			else {
+				LLNode<E> currElement = getElement(index);
+				newElement.prev = currElement.prev;
+				newElement.next = currElement;
+				currElement.prev.next = newElement;
+				currElement.prev = newElement;
+			}
+		}
 		this.size++;
 	}
 
