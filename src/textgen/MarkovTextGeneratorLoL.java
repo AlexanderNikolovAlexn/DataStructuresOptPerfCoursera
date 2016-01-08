@@ -39,20 +39,40 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		this.starter = words[0];
 		String prevWord = this.starter;
 		for (int i = 1; i < words.length; i++) {
+			int index = -1;
 			for (int j = 0; j < wordList.size(); j++) {
 				if(wordList.get(j).getWord().equals(prevWord)) {
-					this.wordList.get(j).addNextWord(words[i]);
+					index = j;
+					break;
 				}
-				else {
-					ListNode newWord = new ListNode(prevWord);
-					this.wordList.add(newWord);
-				}
+			}			
+			if(index != -1) {
+				this.wordList.get(index).addNextWord(words[i]);
+			}
+			else {
+				ListNode newWord = new ListNode(prevWord);
+				newWord.addNextWord(words[i]);								
+				this.wordList.add(newWord);
 			}
 			prevWord = words[i];
 		}
 		
-		ListNode lastWord = this.wordList.get(this.wordList.size() - 1);
-		lastWord.addNextWord(this.starter);
+		int index = -1;
+		for (int j = 0; j < wordList.size(); j++) {
+			if(wordList.get(j).getWord().equals(prevWord)) {
+				index = j;
+			}
+		}
+		
+		if(index == -1) {
+			ListNode newWord = new ListNode(prevWord);
+			newWord.addNextWord(this.starter);								
+			this.wordList.add(newWord);
+		}
+		else {
+			ListNode lastWord = this.wordList.get(this.wordList.size() - 1);
+			lastWord.addNextWord(this.starter);
+		}
 	}
 	
 	/** 
@@ -60,8 +80,27 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	 */
 	@Override
 	public String generateText(int numWords) {
-	    // TODO: Implement this method
-		return null;
+	    String currWord = this.starter;
+	    String output = "";
+	    if(numWords <= 0) {
+	    	return output;
+	    }
+	    output += currWord;
+	    int i = 1;
+	    while(i < numWords) {
+	    	String randWord = "";
+	    	for (int j = 0; j < wordList.size(); j++) {
+				if(wordList.get(j).getWord().equals(currWord)) {
+					ListNode node = wordList.get(j);
+					randWord = node.getRandomNextWord(this.rnGenerator);
+					break;
+				}
+			}
+	    	output += " " + randWord;
+	    	currWord = randWord;
+	    	i++;
+	    }
+		return output;
 	}
 	
 	
@@ -81,10 +120,10 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void retrain(String sourceText)
 	{
-		// TODO: Implement this method.
+		wordList = new LinkedList<ListNode>();
+		starter = "";
+		train(sourceText);
 	}
-	
-	// TODO: Add any private helper methods you need here.
 	
 	
 	/**
@@ -97,39 +136,41 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		// feed the generator a fixed random value for repeatable behavior
 		MarkovTextGeneratorLoL gen = new MarkovTextGeneratorLoL(new Random(42));
 		String textString = "Hello.  Hello there.  This is a test.  Hello there.  Hello Bob.  Test again.";
+		//String textString = "hi there hi Leo";
 		System.out.println(textString);		
 		gen.train(textString);
-		System.out.println(gen.toString());
-//		System.out.println(gen);
-//		System.out.println(gen.generateText(20));
-//		String textString2 = "You say yes, I say no, "+
-//				"You say stop, and I say go, go, go, "+
-//				"Oh no. You say goodbye and I say hello, hello, hello, "+
-//				"I don't know why you say goodbye, I say hello, hello, hello, "+
-//				"I don't know why you say goodbye, I say hello. "+
-//				"I say high, you say low, "+
-//				"You say why, and I say I don't know. "+
-//				"Oh no. "+
-//				"You say goodbye and I say hello, hello, hello. "+
-//				"I don't know why you say goodbye, I say hello, hello, hello, "+
-//				"I don't know why you say goodbye, I say hello. "+
-//				"Why, why, why, why, why, why, "+
-//				"Do you say goodbye. "+
-//				"Oh no. "+
-//				"You say goodbye and I say hello, hello, hello. "+
-//				"I don't know why you say goodbye, I say hello, hello, hello, "+
-//				"I don't know why you say goodbye, I say hello. "+
-//				"You say yes, I say no, "+
-//				"You say stop and I say go, go, go. "+
-//				"Oh, oh no. "+
-//				"You say goodbye and I say hello, hello, hello. "+
-//				"I don't know why you say goodbye, I say hello, hello, hello, "+
-//				"I don't know why you say goodbye, I say hello, hello, hello, "+
-//				"I don't know why you say goodbye, I say hello, hello, hello,";
-//		System.out.println(textString2);
-//		gen.retrain(textString2);
-//		System.out.println(gen);
-//		System.out.println(gen.generateText(20));
+		gen.train(textString);
+		gen.train(textString);
+		System.out.println(gen);
+		System.out.println(gen.generateText(40));
+		String textString2 = "You say yes, I say no, "+
+				"You say stop, and I say go, go, go, "+
+				"Oh no. You say goodbye and I say hello, hello, hello, "+
+				"I don't know why you say goodbye, I say hello, hello, hello, "+
+				"I don't know why you say goodbye, I say hello. "+
+				"I say high, you say low, "+
+				"You say why, and I say I don't know. "+
+				"Oh no. "+
+				"You say goodbye and I say hello, hello, hello. "+
+				"I don't know why you say goodbye, I say hello, hello, hello, "+
+				"I don't know why you say goodbye, I say hello. "+
+				"Why, why, why, why, why, why, "+
+				"Do you say goodbye. "+
+				"Oh no. "+
+				"You say goodbye and I say hello, hello, hello. "+
+				"I don't know why you say goodbye, I say hello, hello, hello, "+
+				"I don't know why you say goodbye, I say hello. "+
+				"You say yes, I say no, "+
+				"You say stop and I say go, go, go. "+
+				"Oh, oh no. "+
+				"You say goodbye and I say hello, hello, hello. "+
+				"I don't know why you say goodbye, I say hello, hello, hello, "+
+				"I don't know why you say goodbye, I say hello, hello, hello, "+
+				"I don't know why you say goodbye, I say hello, hello, hello,";
+		System.out.println(textString2);
+		gen.retrain(textString2);
+		System.out.println(gen);
+		System.out.println(gen.generateText(20));
 	}
 
 }
@@ -162,10 +203,9 @@ class ListNode
 	
 	public String getRandomNextWord(Random generator)
 	{
-		// TODO: Implement this method
-	    // The random number generator should be passed from 
+		// The random number generator should be passed from 
 	    // the MarkovTextGeneratorLoL class
-	    return null;
+	    return this.nextWords.get(generator.nextInt(this.nextWords.size()));
 	}
 
 	public String toString()
