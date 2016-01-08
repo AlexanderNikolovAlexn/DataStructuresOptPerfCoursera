@@ -32,9 +32,9 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void train(String sourceText)
 	{
-		String[] words = sourceText.replaceAll("[!?.,]", " ").split("[\\s]+");
+		String[] words = sourceText.split("[\\s]+");
 		if(words.length <= 0) {
-			throw new NullPointerException("Empty list!");
+			return;
 		}
 		this.starter = words[0];
 		String prevWord = this.starter;
