@@ -67,7 +67,7 @@ public class NearbyWordsGraderOne {
             return;
         }
 
-        out.println(feedback + "Tests complete. Check that everything looks right.");
+        System.out.println(feedback + "Tests complete. Check that everything looks right.");
         out.close();
     }
 }
